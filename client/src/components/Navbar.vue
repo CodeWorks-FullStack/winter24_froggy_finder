@@ -16,6 +16,12 @@
             About
           </router-link>
         </li>
+        <li>
+          <button data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas" aria-controls="searchOffcanvas"
+            class="btn text-success lighten-30 selectable text-uppercase" title="open search form">
+            Search <i class="mdi mdi-magnify"></i>
+          </button>
+        </li>
       </ul>
       <!-- LOGIN COMPONENT HERE -->
       <div>

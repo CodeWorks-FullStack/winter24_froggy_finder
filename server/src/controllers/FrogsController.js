@@ -19,13 +19,12 @@ export class FrogsController extends BaseController {
   }
   async getFrogs(req, res, next) {
     try {
-      const frogs = await frogsService.getFrogs()
+      const frogs = await frogsService.getFrogs(req.query)
       res.send(frogs)
     } catch (error) {
       next(error)
     }
   }
-
   async update(req, res, next) {
     try {
       const frog = await frogsService.update(req.params.id, req.body)

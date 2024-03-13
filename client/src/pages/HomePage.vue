@@ -3,7 +3,7 @@
     <section class="row">
       <div class="col-12 my-3">
         <h1>
-          {{ frogs.length }} Single Frogs found
+          {{ totalFrogs }} Single Frog<span v-if="totalFrogs != 1">s</span> found
         </h1>
       </div>
     </section>
@@ -12,36 +12,61 @@
         <FrogCard :frog="froggy" />
       </div>
     </section>
+    <section class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-between">
+          <button @click="changePage(page - 1)" :disabled="page < 2" class="btn btn-success fs-4">
+            Previous
+          </button>
+          <button @click="changePage(page + 1)" :disabled="page == totalPages" class="btn btn-success fs-4">
+            Next
+          </button>
+        </div>
+      </div>
+    </section>
   </div>
+
+  <OffcanvasComponent />
 </template>
 
 <script>
-import { computed, onMounted } from 'vue';
+import { computed, watch } from 'vue';
 import { frogsService } from '../services/FrogsService.js';
 import Pop from '../utils/Pop.js';
 import { AppState } from '../AppState.js';
 import FrogCard from '../components/FrogCard.vue';
+import { useRoute, useRouter } from 'vue-router';
+import OffcanvasComponent from '../components/OffcanvasComponent.vue';
 
 export default {
   setup() {
+    const router = useRouter()
+    const route = useRoute()
 
-    async function getFrogs() {
+    async function getFrogs(query) {
       try {
-        await frogsService.getFrogs()
+        await frogsService.getFrogs(query)
       } catch (error) {
         Pop.error(error)
       }
     }
 
-    onMounted(getFrogs)
+    // onMounted(getFrogs)
 
-
+    watch(() => route.query, (query) => { getFrogs(query) }, { immediate: true })
 
     return {
-      frogs: computed(() => AppState.frogs)
+      frogs: computed(() => AppState.frogs),
+      page: computed(() => AppState.page),
+      totalPages: computed(() => AppState.totalPages),
+      totalFrogs: computed(() => AppState.totalFrogs),
+
+      changePage(pageNumber) {
+        router.push({ query: { ...route.query, page: pageNumber } })
+      }
     }
   },
-  components: { FrogCard }
+  components: { FrogCard, OffcanvasComponent }
 }
 </script>
 

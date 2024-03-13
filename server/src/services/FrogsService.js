@@ -1,4 +1,5 @@
 import { dbContext } from "../db/DbContext.js"
+import { FrogQuery } from "../models/Frog.js"
 import { BadRequest } from "../utils/Errors.js"
 
 class FrogsService {
@@ -7,9 +8,26 @@ class FrogsService {
     const frog = await dbContext.Frogs.create(data)
     return frog
   }
-  async getFrogs() {
-    const frogs = await dbContext.Frogs.find()
-    return frogs
+
+  async getFrogs(query) {
+    const pageNumber = parseInt(query.page) || 1
+    const frogLimit = 3
+    const offset = frogLimit * (pageNumber - 1)
+
+    const frogQuery = new FrogQuery(query)
+
+    const frogs = await dbContext.Frogs.find(frogQuery).limit(frogLimit).skip(offset).sort({ createdAt: 'descending' })
+
+    const frogCount = await dbContext.Frogs.countDocuments(frogQuery)
+
+    const paginatedResponseObject = {
+      frogs,
+      page: pageNumber,
+      totalPages: Math.ceil(frogCount / frogLimit),
+      totalFrogs: frogCount
+    }
+
+    return paginatedResponseObject
   }
 
   async getById(id) {

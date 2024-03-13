@@ -8,6 +8,9 @@ export const AppState = reactive({
   account: {},
 
   /** @type {import('./models/Frog.js').Frog[]} */
-  frogs: []
+  frogs: [],
 
+  page: 0,
+  totalPages: 0,
+  totalFrogs: 0
 })

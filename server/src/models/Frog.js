@@ -14,6 +14,8 @@ function _validateLikes(likesValue) {
   return likesValue.every(like => like.length < 26)
 }
 
+const maxAge = 100
+
 export const FrogSchema = new Schema(
   {
     name: {
@@ -31,7 +33,7 @@ export const FrogSchema = new Schema(
       type: Number,
       required: true,
       min: 18,
-      max: 100
+      max: maxAge
     },
     isPoisonous: {
       type: Boolean,
@@ -54,10 +56,20 @@ export const FrogSchema = new Schema(
     dislikes: {
       type: [String],
       validate: { validator: _validateLikes, message: "A dislike can only be up to 25 characters" },
-    }
+    },
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true }
+    toJSON: { virtuals: true },
   }
 )
+
+export class FrogQuery {
+  constructor(queryObject) {
+    this.name = new RegExp(queryObject.name, 'ig')
+    this.color = new RegExp(queryObject.color, 'ig')
+    this.likes = new RegExp(queryObject.likes, 'ig')
+    this.dislikes = new RegExp(queryObject.dislikes, 'ig')
+    this.age = { $lte: queryObject.age || maxAge }
+  }
+}
