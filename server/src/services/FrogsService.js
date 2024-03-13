@@ -16,7 +16,11 @@ class FrogsService {
 
     const frogQuery = new FrogQuery(query)
 
-    const frogs = await dbContext.Frogs.find(frogQuery).limit(frogLimit).skip(offset).sort({ createdAt: 'descending' })
+    const frogs = await dbContext.Frogs
+      .find(frogQuery)
+      .limit(frogLimit)
+      .skip(offset)
+      .sort({ createdAt: 'descending' })
 
     const frogCount = await dbContext.Frogs.countDocuments(frogQuery)
 
