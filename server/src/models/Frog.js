@@ -61,3 +61,11 @@ export const FrogSchema = new Schema(
     toJSON: { virtuals: true }
   }
 )
+
+export class FrogQuery {
+  constructor(queryObject) {
+    // NOTE creates regex string for match, i denotes ignore case, g denotes looks through whole string for match
+    this.name = new RegExp(queryObject.name, 'ig')
+    this.color = new RegExp(queryObject.color, 'ig')
+  }
+}
