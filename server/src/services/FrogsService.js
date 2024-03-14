@@ -8,6 +8,7 @@ class FrogsService {
     return frog
   }
   async getFrogs(query) {
+    query.name = new RegExp(query.name, 'ig')
     const frogs = await dbContext.Frogs.find(query)
     return frogs
   }
