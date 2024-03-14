@@ -15,16 +15,17 @@ class FrogsService {
     const skipNumber = (pageNumber - 1) * frogLimit
 
 
+    // NOTE passes the request query through our FrogQuery constructor, which removes additional fields and applies regex to the properties
     const frogQuery = new FrogQuery(query)
 
     const frogs = await dbContext.Frogs
       .find(frogQuery)
-      .limit(frogLimit)
-      .skip(skipNumber)
-      // .sort({ name: 'ascending' })
-      .sort({ createdAt: 'descending' })
+      .limit(frogLimit) // limits how many documents to pull out of database
+      .skip(skipNumber) // skips over a number of documents in database
+      // .sort({ name: 'ascending' }) alphabetical sort
+      .sort({ createdAt: 'descending' }) // shows newest created documents first
 
-    const frogCount = await dbContext.Frogs.countDocuments(frogQuery)
+    const frogCount = await dbContext.Frogs.countDocuments(frogQuery) // counts total documents in database
 
     const responseObject = {
       frogs: frogs,
