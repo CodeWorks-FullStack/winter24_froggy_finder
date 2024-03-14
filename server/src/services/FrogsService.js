@@ -7,8 +7,8 @@ class FrogsService {
     const frog = await dbContext.Frogs.create(data)
     return frog
   }
-  async getFrogs() {
-    const frogs = await dbContext.Frogs.find()
+  async getFrogs(query) {
+    const frogs = await dbContext.Frogs.find(query)
     return frogs
   }
 

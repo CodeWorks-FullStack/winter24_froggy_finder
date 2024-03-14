@@ -19,7 +19,8 @@ export class FrogsController extends BaseController {
   }
   async getFrogs(req, res, next) {
     try {
-      const frogs = await frogsService.getFrogs()
+      const query = req.query
+      const frogs = await frogsService.getFrogs(query)
       res.send(frogs)
     } catch (error) {
       next(error)
