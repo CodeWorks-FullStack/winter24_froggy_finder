@@ -19,6 +19,8 @@ export class FrogsController extends BaseController {
   }
   async getFrogs(req, res, next) {
     try {
+      // NOTE pull query parameters out of request url
+      // If request url is formatted like 'api/frogs?name=louie', req.query would be {name: 'louie'}
       const query = req.query
       const frogs = await frogsService.getFrogs(query)
       res.send(frogs)
