@@ -16,6 +16,10 @@
             About
           </router-link>
         </li>
+        <li>
+          <button class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas"
+            aria-controls="offcanvasExample">Search</button>
+        </li>
       </ul>
       <!-- LOGIN COMPONENT HERE -->
       <div>
