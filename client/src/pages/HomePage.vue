@@ -61,7 +61,7 @@ export default {
       totalPages: computed(() => AppState.totalPages),
       changePage(pageNumber) {
         logger.log('page', pageNumber)
-        router.push({ query: { page: pageNumber } })
+        router.push({ query: { ...route.query, page: pageNumber } })
       }
     }
   },
