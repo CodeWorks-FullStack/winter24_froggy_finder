@@ -3,7 +3,7 @@
     <section class="row">
       <div class="col-12 my-3">
         <h1>
-          {{ frogs.length }} Single Frogs found
+          {{ totalFrogs }} Single Frogs found
         </h1>
       </div>
     </section>
@@ -12,33 +12,57 @@
         <FrogCard :frog="froggy" />
       </div>
     </section>
+
+    <section class="row">
+      <div class="col-12 d-flex justify-content-between align-items-center">
+        <button @click="changePage(page - 1)" class="btn btn-success fs-4">Previous</button>
+        <p class="fs-4 mb-0">Page {{ page }} of {{ totalPages }}</p>
+        <button @click="changePage(page + 1)" class="btn btn-success fs-4">Next</button>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { frogsService } from '../services/FrogsService.js';
 import Pop from '../utils/Pop.js';
 import { AppState } from '../AppState.js';
 import FrogCard from '../components/FrogCard.vue';
+import { useRoute, useRouter } from 'vue-router';
+import { logger } from '../utils/Logger.js';
 
 export default {
   setup() {
+    const route = useRoute()
+    const router = useRouter()
 
-    async function getFrogs() {
+    async function getFrogs(query) {
       try {
-        await frogsService.getFrogs()
+        await frogsService.getFrogs(query)
       } catch (error) {
         Pop.error(error)
       }
     }
 
-    onMounted(getFrogs)
+    onMounted(() => {
+      getFrogs()
+    })
 
+    watch(() => route.query, () => {
+      getFrogs(route.query)
+    })
 
 
     return {
-      frogs: computed(() => AppState.frogs)
+      frogs: computed(() => AppState.frogs),
+      totalFrogs: computed(() => AppState.totalFrogs),
+      page: computed(() => AppState.page),
+      totalPages: computed(() => AppState.totalPages),
+      changePage(pageNumber) {
+        logger.log('page', pageNumber)
+        router.push({ query: { page: pageNumber } })
+      }
     }
   },
   components: { FrogCard }
