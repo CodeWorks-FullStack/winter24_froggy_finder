@@ -15,9 +15,13 @@
 
     <section class="row">
       <div class="col-12 d-flex justify-content-between align-items-center">
-        <button @click="changePage(page - 1)" class="btn btn-success fs-4">Previous</button>
+        <button @click="changePage(page - 1)" class="btn btn-success fs-4" :disabled="page < 2">
+          Previous
+        </button>
         <p class="fs-4 mb-0">Page {{ page }} of {{ totalPages }}</p>
-        <button @click="changePage(page + 1)" class="btn btn-success fs-4">Next</button>
+        <button @click="changePage(page + 1)" class="btn btn-success fs-4" :disabled="page >= totalPages">
+          Next
+        </button>
       </div>
     </section>
   </div>
@@ -45,13 +49,9 @@ export default {
       }
     }
 
-    onMounted(() => {
-      getFrogs()
-    })
-
     watch(() => route.query, () => {
       getFrogs(route.query)
-    })
+    }, { immediate: true })
 
 
     return {
